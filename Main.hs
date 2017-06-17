@@ -8,7 +8,6 @@ import              Data.Ratio
 import              System.Environment
 import              System.Exit
 import qualified    System.Console.GetOpt as GetOpt
-import qualified    Filesystem.Path.CurrentOS as Path ( fromText )
 import              Text.Parsec
 import              Control.Applicative
 
@@ -24,7 +23,7 @@ main = do
     if length params /= 2
         then (putStr $ helpMessage) >> exitFailure
         else return ()
-    
+
     let fuzz = getFuzz opts
         resize = getResizeFactor opts
         bg = getBackgroundColor opts
@@ -112,4 +111,3 @@ percent_param = (integer >>= return . ( % 100)) <* option '%' percent <* eof
 fuzz_param = percent_param
 resize_param = percent_param
 slot_count = int
-

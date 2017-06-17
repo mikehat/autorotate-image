@@ -17,7 +17,6 @@ import              Text.Printf
 
 import              Data.Text as Text                   ( pack )
 import              Data.Text.Encoding                  ( encodeUtf8 )
-import qualified    Filesystem.Path.CurrentOS as Path   ( fromText )
 import qualified    Data.Vector.Storable as Vector
 import              Graphics.ImageMagick.MagickWand
 
@@ -33,8 +32,8 @@ autorotate
     -> IO ()
 autorotate in_file out_file fuzz resize slots bg_color = withMagickWandGenesis $ do
 
-    let in_file' = Path.fromText $ pack in_file
-        out_file' = Path.fromText $ pack out_file
+    let in_file' = pack in_file
+        out_file' = pack out_file
         bg_color' = encodeUtf8 $ pack bg_color
 
     background <- pixelWand
@@ -66,7 +65,7 @@ autorotate in_file out_file fuzz resize slots bg_color = withMagickWandGenesis $
 
     transparentPaintImage scaled_image background 0 fuzz' False
 
-    edges <- getSlopesHaskell scaled_image 
+    edges <- getSlopesHaskell scaled_image
 
     let slopes = concat $ map all_slopes edges
         -- the lowest slope value should be 1 (i.e. a 45 degree rotation)
@@ -141,7 +140,7 @@ mk_mask it = do
 getSlopesHaskell scaled_image = do
     mask <- mk_mask =<< (return . snd) =<< pixelIterator scaled_image
 
-    let 
+    let
         mask' = transpose mask
         mask0 = mask
         mask90 = map reverse mask'
@@ -174,7 +173,7 @@ getSlopesFlipFlop background scaled_image = do
     flipImage scaled_image
     -- writeImage scaled_image (Just "s-bottom.png")
     bottom_edges <- return . map lift_fst =<< return . flip zip [0..] =<< find_left_edgesM =<< return . snd =<< pixelIterator scaled_image
-    
+
     return $ map catMaybes [left_edges, bottom_edges, right_edges, top_edges]
 
 
@@ -192,7 +191,7 @@ getEdgesRotate background scaled_image = do
     rotateImage scaled_image background 90
     -- writeImage scaled_image (Just "s270.png")
     top_edges    <- return . map lift_fst =<< return . flip zip [0..] =<< find_left_edgesM =<< return . snd =<< pixelIterator scaled_image
-    
+
     return $ map catMaybes [left_edges, bottom_edges, right_edges, top_edges]
 
 
