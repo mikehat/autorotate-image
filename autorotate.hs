@@ -8,7 +8,6 @@ import              Data.Ratio
 import              System.Environment
 import              System.Exit
 import qualified    System.Console.GetOpt as GetOpt
-import qualified    Filesystem.Path.CurrentOS as Path ( fromText )
 import              Text.Parsec
 import              Control.Applicative
 
